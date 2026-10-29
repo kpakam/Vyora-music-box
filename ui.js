@@ -154,63 +154,129 @@ const UI = {
     this.setActiveNav('home');
     const recentIds = Store.getRecent();
     const recent = recentIds.map(id => enrichTrack(getTrack(id))).filter(Boolean);
-    const topTracks = [...CATALOG.tracks].sort((a, b) => b.plays - a.plays).slice(0, 8).map(enrichTrack);
-    const newReleases = [...CATALOG.albums].sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || '')).slice(0, 6);
-    const trending = [...CATALOG.tracks].sort((a, b) => b.plays - a.plays).slice(0, 5).map(enrichTrack);
+    const topTracks = [...CATALOG.tracks].sort((a, b) => b.plays - a.plays).slice(0, 10).map(enrichTrack);
+    const newReleases = [...CATALOG.albums].sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || '')).slice(0, 8);
+    const trending = topTracks.slice(0, 6);
     const featured = CATALOG.albums[0];
-    const charts = topTracks.slice(0, 10);
+    const quickSource = recent.length ? recent.slice(0, 6) : topTracks.slice(0, 6);
+    const madeForYou = topTracks.slice(2, 8);
 
     this.content.innerHTML = `
-      <h1 class="section-title">Good ${this.greeting()}</h1>
-      <p class="text-muted mb-4" style="font-size:0.9rem;">VYORA · Music Without Borders.</p>
-      <div class="ad-slot"><span>Ad placement (free tier) — premium removes ads · backend required</span></div>
+      <h1 class="home-greeting">Good ${this.greeting()}</h1>
+      <p class="home-sub">VYORA · Music Without Borders.</p>
+
+      <div class="quick-picks">
+        ${quickSource.map(t => `
+          <div class="quick-pick" data-play="${t.id}">
+            <div class="quick-pick-art" style="${this.artStyle(t.imageColor)}">♪</div>
+            <div class="quick-pick-title">${this.esc(t.title)}</div>
+            <button class="qp-play" data-play="${t.id}" aria-label="Play">▶</button>
+          </div>
+        `).join('')}
+      </div>
 
       ${featured ? `
-      <div class="hero featured-hero mb-4" data-nav="#/album/${featured.id}" style="cursor:pointer;">
-        <div class="hero-art placeholder-art" style="${this.artStyle(featured.imageColor)}; font-size:3rem;">💿</div>
-        <div class="hero-info">
-          <div class="hero-type">Featured</div>
-          <h2 class="hero-title" style="font-size:1.8rem;">${this.esc(featured.title)}</h2>
-          <div class="hero-meta">${this.esc(getArtist(featured.artistId)?.name)} · ${featured.year}</div>
-          <div class="hero-actions">
-            <button class="btn btn-primary" data-play="${featured.tracks[0]}" data-context="album" data-ids='${JSON.stringify(featured.tracks)}'>▶ Play</button>
+      <div class="hero-pro">
+        <div class="hero-pro-inner">
+          <div class="hero-pro-art" style="${this.artStyle(featured.imageColor)}" data-nav="#/album/${featured.id}">♪</div>
+          <div class="hero-pro-info">
+            <div class="hero-pro-badge"><span></span> Featured album</div>
+            <h2 class="hero-pro-title">${this.esc(featured.title)}</h2>
+            <div class="hero-pro-meta">${this.esc(getArtist(featured.artistId)?.name)} · ${featured.year} · ${featured.tracks.length} tracks</div>
+            <div class="hero-pro-actions">
+              <button class="btn-hero btn-hero-primary" data-play="${featured.tracks[0]}" data-context="album" data-ids='${JSON.stringify(featured.tracks)}'>▶ Play</button>
+              <button class="btn-hero btn-hero-ghost" data-nav="#/album/${featured.id}">View album</button>
+            </div>
           </div>
         </div>
       </div>` : ''}
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Genre shortcuts</h2></div>
-      <div class="genre-row mb-4">
+      <div class="section-head">
+        <h2>Genres</h2>
+        <span class="see-all" data-nav="#/genres">See all</span>
+      </div>
+      <div class="genre-pro">
         ${GENRES.slice(0, 8).map(g => `
-          <button class="genre-chip" data-nav="#/genre/${g.id}" style="--gcolor:${g.color}">${this.esc(g.name)}</button>
+          <button class="genre-tile" data-nav="#/genre/${g.id}" style="background:linear-gradient(135deg,${g.color},${g.color}99)">${this.esc(g.name)}</button>
         `).join('')}
-        <button class="genre-chip" data-nav="#/genres" style="--gcolor:#71717a">All →</button>
       </div>
 
       ${recent.length ? `
-        <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Continue listening</h2></div>
-        <div class="track-list mb-4">${recent.slice(0, 5).map((t, i) => this.trackRow(t, i + 1)).join('')}</div>
-      ` : ''}
+      <div class="section-head"><h2>Continue listening</h2></div>
+      <div class="scroll-rail">
+        ${recent.slice(0, 10).map(t => `
+          <div class="card" data-play="${t.id}">
+            <div class="card-art" style="${this.artStyle(t.imageColor)}">♪</div>
+            <div class="card-title">${this.esc(t.title)}</div>
+            <div class="card-sub">${this.esc(t.artistName || '')}</div>
+          </div>
+        `).join('')}
+      </div>` : ''}
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Trending</h2></div>
-      <div class="track-list mb-4">${trending.map((t, i) => this.trackRow(t, i + 1)).join('')}</div>
+      <div class="section-head">
+        <h2><span class="live-badge"><i></i> Live</span> &nbsp; Trending now</h2>
+        <span class="see-all" data-nav="#/charts">Charts</span>
+      </div>
+      <div class="chart-list">
+        ${trending.map((t, i) => `
+          <div class="chart-row" data-play="${t.id}">
+            <div class="chart-rank ${i < 3 ? 'top3' : ''}">${i + 1}</div>
+            <div class="chart-art" style="${this.artStyle(t.imageColor)}">♪</div>
+            <div class="chart-info">
+              <div class="chart-title">${this.esc(t.title)}</div>
+              <div class="chart-artist">${this.esc(t.artistName || '')}</div>
+            </div>
+            <div class="chart-plays">${this.formatPlays ? this.formatPlays(t.plays) : (t.plays || 0).toLocaleString()} plays</div>
+          </div>
+        `).join('')}
+      </div>
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">New releases</h2></div>
-      <div class="grid mb-4">${newReleases.map(al => this.albumCard(al)).join('')}</div>
+      <div class="section-head">
+        <h2>New releases</h2>
+        <span class="see-all" data-nav="#/discover">Discover</span>
+      </div>
+      <div class="scroll-rail">
+        ${newReleases.map(al => `
+          <div class="card" data-nav="#/album/${al.id}">
+            <div class="card-art" style="${this.artStyle(al.imageColor)}">💿</div>
+            <div class="card-title">${this.esc(al.title)}</div>
+            <div class="card-sub">${this.esc(getArtist(al.artistId)?.name || '')}</div>
+          </div>
+        `).join('')}
+      </div>
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Popular artists</h2></div>
-      <div class="grid mb-4">${CATALOG.artists.slice(0, 6).map(a => this.artistCard(a)).join('')}</div>
+      <div class="section-head"><h2>Popular artists</h2></div>
+      <div class="scroll-rail">
+        ${CATALOG.artists.slice(0, 10).map(a => `
+          <div class="card" data-nav="#/artist/${a.id}">
+            <div class="card-art artist-art" style="${this.artStyle(a.imageColor)}">🎤</div>
+            <div class="card-title">${this.esc(a.name)}</div>
+            <div class="card-sub">Artist</div>
+          </div>
+        `).join('')}
+      </div>
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Popular albums</h2></div>
-      <div class="grid mb-4">${CATALOG.albums.slice(0, 6).map(al => this.albumCard(al)).join('')}</div>
+      <div class="section-head"><h2>Made for you</h2></div>
+      <div class="scroll-rail">
+        ${madeForYou.map(t => `
+          <div class="card" data-play="${t.id}">
+            <div class="card-art" style="${this.artStyle(t.imageColor)}">♪</div>
+            <div class="card-title">${this.esc(t.title)}</div>
+            <div class="card-sub">${this.esc(t.artistName || '')}</div>
+          </div>
+        `).join('')}
+      </div>
 
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Charts</h2></div>
-      <div class="track-list mb-4">${charts.map((t, i) => this.trackRow(t, i + 1)).join('')}</div>
-
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Recommended</h2></div>
-      <div class="track-list mb-4">${topTracks.slice(3, 8).map((t, i) => this.trackRow(t, i + 1)).join('')}</div>
-
-      <div class="section-header"><h2 class="section-title" style="font-size:1.15rem;">Recently added</h2></div>
-      <div class="grid">${newReleases.slice(0, 4).map(al => this.albumCard(al)).join('')}</div>
+      <div class="section-head"><h2>Popular albums</h2></div>
+      <div class="scroll-rail">
+        ${CATALOG.albums.slice(0, 10).map(al => `
+          <div class="card" data-nav="#/album/${al.id}">
+            <div class="card-art" style="${this.artStyle(al.imageColor)}">💿</div>
+            <div class="card-title">${this.esc(al.title)}</div>
+            <div class="card-sub">${this.esc(getArtist(al.artistId)?.name || '')}</div>
+          </div>
+        `).join('')}
+      </div>
     `;
   },
 
