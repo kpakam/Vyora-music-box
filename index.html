@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0c" />
+  <meta name="description" content="VYORA – Music Without Borders. Stream music from around the world." />
+  <meta name="application-name" content="VYORA" />
+  <meta property="og:title" content="VYORA – Music Without Borders." />
+  <meta property="og:description" content="Stream music without borders." />
+  <meta property="og:type" content="website" />
+  <title>VYORA – Music Without Borders.</title>
+  <!-- Inline favicon (violet V mark) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%238b5cf6'/%3E%3Cpath d='M8 8l8 16 8-16h-3.2L16 18.5 11.2 8H8z' fill='white'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <noscript>
+    <div style="padding:40px;text-align:center;font-family:sans-serif;background:#0a0a0c;color:#fff;min-height:100vh;">
+      <h1>VYORA</h1>
+      <p>JavaScript is required. Please enable it and reload.</p>
+    </div>
+  </noscript>
+  <div id="load-error" style="display:none;padding:40px;text-align:center;font-family:sans-serif;background:#0a0a0c;color:#fff;min-height:100vh;">
+    <h1 style="color:#8b5cf6;">VYORA</h1>
+    <p style="color:#a1a1aa;max-width:420px;margin:12px auto;">The app could not start. Do <strong>not</strong> open index.html directly.</p>
+    <p style="color:#f4f4f5;margin-top:20px;">Run a local server first:</p>
+    <pre style="background:#18181c;padding:16px;border-radius:12px;display:inline-block;text-align:left;color:#22d3ee;">python3 -m http.server 3456</pre>
+    <p style="color:#a1a1aa;margin-top:16px;">Then open <strong>http://127.0.0.1:3456</strong></p>
+  </div>
+
+  <!-- Splash / loading -->
+  <div id="splash" class="splash">
+    <div class="splash-logo">
+      <svg viewBox="0 0 64 64" width="72" height="72" fill="none" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="url(#vyg)"/>
+        <path d="M16 16l16 32 16-32h-6.5L32 37 22.5 16H16z" fill="#fff"/>
+        <defs><linearGradient id="vyg" x1="0" y1="0" x2="64" y2="64"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+      </svg>
+    </div>
+    <div class="splash-wordmark">VYORA</div>
+    <div class="splash-tagline">Music Without Borders.</div>
+  </div>
+
+  <div id="app" class="app-hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="logo">
+        <span class="logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#lg)"/>
+            <path d="M8 8l8 16 8-16h-3.2L16 18.5 11.2 8H8z" fill="#fff"/>
+            <defs><linearGradient id="lg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="logo-text-wrap">
+          <span class="logo-text">VYORA</span>
+          <span class="logo-tagline">Music Without Borders.</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#/" class="nav-item active" data-page="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </a>
+        <a href="#/discover" class="nav-item" data-page="discover">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Discover
+        </a>
+        <a href="#/charts" class="nav-item" data-page="charts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Charts
+        </a>
+        <a href="#/library" class="nav-item" data-page="library">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Library
+        </a>
+        <a href="#/favorites" class="nav-item" data-page="favorites">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Liked
+        </a>
+        <a href="#/genres" class="nav-item" data-page="genres">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Genres
+        </a>
+        <div class="nav-divider"></div>
+        <a href="#/playlists" class="nav-item" data-page="playlists">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Playlists
+        </a>
+        <a href="#/artist-portal" class="nav-item" data-page="artist-portal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          Artist Portal
+        </a>
+        <a href="#/profile" class="nav-item" data-page="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+        <a href="#/admin" class="nav-item admin-only" data-page="admin" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Admin
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="create-playlist-btn" class="btn-create">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Playlist
+        </button>
+      </div>
+    </aside>
+
+    <main id="main" class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="menu-toggle" class="icon-btn mobile-only" aria-label="Menu">☰</button>
+          <div class="search-bar" id="top-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="global-search" placeholder="Search VYORA…" />
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button id="theme-toggle" class="icon-btn" title="Toggle theme">🌙</button>
+          <div class="user-chip" id="user-chip">
+            <div class="avatar" id="user-avatar">?</div>
+            <span id="user-name">Sign in</span>
+          </div>
+        </div>
+      </header>
+      <div id="content" class="content"></div>
+    </main>
+
+    <!-- Mini player (persistent) -->
+    <footer id="player" class="player">
+      <div class="player-track" id="player-open-full" title="Open full player">
+        <div class="player-art placeholder-art" id="player-art"></div>
+        <div class="player-info">
+          <div class="player-title" id="player-title">Select a track</div>
+          <div class="player-artist" id="player-artist">—</div>
+        </div>
+        <button class="icon-btn fav-btn" id="player-fav" title="Favorite">♡</button>
+        <button class="icon-btn" id="btn-add-playlist" title="Add to playlist">+</button>
+        <button class="icon-btn" id="btn-share" title="Share">↗</button>
+      </div>
+      <div class="player-controls">
+        <div class="control-btns">
+          <button class="icon-btn" id="btn-shuffle" title="Shuffle">⇄</button>
+          <button class="icon-btn" id="btn-prev" title="Previous">⏮</button>
+          <button class="play-btn" id="btn-play" title="Play">▶</button>
+          <button class="icon-btn" id="btn-next" title="Next">⏭</button>
+          <button class="icon-btn" id="btn-repeat" title="Repeat">↻</button>
+        </div>
+        <div class="progress-row">
+          <span id="time-current">0:00</span>
+          <input type="range" id="progress" min="0" max="100" value="0" />
+          <span id="time-total">0:00</span>
+        </div>
+      </div>
+      <div class="player-extra">
+        <button class="icon-btn" id="btn-queue" title="Queue">☰</button>
+        <div class="volume">
+          <button class="icon-btn" id="btn-mute" title="Mute">🔊</button>
+          <input type="range" id="volume" min="0" max="100" value="80" />
+        </div>
+      </div>
+    </footer>
+
+    <!-- Full-screen player -->
+    <div id="full-player" class="full-player hidden">
+      <button id="full-player-close" class="icon-btn full-player-close" aria-label="Close">✕</button>
+      <div class="full-player-art placeholder-art" id="full-player-art"></div>
+      <div class="full-player-title" id="full-player-title">—</div>
+      <div class="full-player-artist" id="full-player-artist">—</div>
+      <div class="full-player-progress">
+        <input type="range" id="full-progress" min="0" max="100" value="0" />
+        <div class="flex justify-between"><span id="full-time-current">0:00</span><span id="full-time-total">0:00</span></div>
+      </div>
+      <div class="full-player-controls">
+        <button class="icon-btn" id="full-shuffle">⇄</button>
+        <button class="icon-btn" id="full-prev">⏮</button>
+        <button class="play-btn large" id="full-play">▶</button>
+        <button class="icon-btn" id="full-next">⏭</button>
+        <button class="icon-btn" id="full-repeat">↻</button>
+      </div>
+      <div class="full-player-actions">
+        <button class="icon-btn" id="full-fav">♡</button>
+        <button class="icon-btn" id="full-add">+</button>
+        <button class="icon-btn" id="full-share">↗</button>
+        <button class="icon-btn" id="full-queue">☰</button>
+      </div>
+    </div>
+
+    <div id="queue-panel" class="queue-panel hidden">
+      <div class="queue-header">
+        <h3>Queue</h3>
+        <button id="close-queue" class="icon-btn">✕</button>
+      </div>
+      <div id="queue-list" class="queue-list"></div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div id="modal" class="modal">
+        <button id="modal-close" class="modal-close">✕</button>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function dismissSplash() {
+      var s = document.getElementById('splash');
+      var a = document.getElementById('app');
+      if (s) { s.classList.add('splash-hide'); setTimeout(function(){ if(s.parentNode) s.remove(); }, 400); }
+      if (a) a.classList.remove('app-hidden');
+    }
+    function showLoadError() {
+      dismissSplash();
+      var a = document.getElementById('app');
+      if (a) a.style.display = 'none';
+      var e = document.getElementById('load-error');
+      if (e) e.style.display = 'block';
+    }
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (typeof UI === 'undefined' || typeof Player === 'undefined' || typeof CATALOG === 'undefined') {
+          showLoadError();
+        } else {
+          dismissSplash();
+        }
+      }, 600);
+    });
+    setTimeout(function () {
+      if (typeof UI === 'undefined') showLoadError();
+      else dismissSplash();
+    }, 3000);
+  </script>
+</body>
+</html>

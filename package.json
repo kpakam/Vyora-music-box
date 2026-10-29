@@ -1,0 +1,10 @@
+{
+  "name": "vyora",
+  "version": "2.0.0",
+  "description": "VYORA – Music Without Borders.",
+  "scripts": {
+    "start": "python3 -m http.server 3456",
+    "dev": "python3 -m http.server 3456"
+  },
+  "license": "MIT"
+}
